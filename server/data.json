@@ -1,0 +1,12 @@
+[
+  { "id": 1, "name": "Arun", "city": "Chennai", "study": "B.E. CSE", "age": 21 },
+  { "id": 2, "name": "Priya", "city": "Madurai", "study": "B.Sc Maths", "age": 20 },
+  { "id": 3, "name": "Sanjay", "city": "Coimbatore", "study": "MBA", "age": 23 },
+  { "id": 4, "name": "Deepa", "city": "Trichy", "study": "B.Com", "age": 19 },
+  { "id": 5, "name": "Vijay", "city": "Salem", "study": "M.Tech", "age": 25 },
+  { "id": 6, "name": "Anitha", "city": "Erode", "study": "MBBS", "age": 22 },
+  { "id": 7, "name": "Karthik", "city": "Tirunelveli", "study": "B.Arch", "age": 24 },
+  { "id": 8, "name": "Meena", "city": "Vellore", "study": "B.A. English", "age": 21 },
+  { "id": 9, "name": "Rahul", "city": "Thanjavur", "study": "BCA", "age": 20 },
+  { "id": 10, "name": "Divya", "city": "Kanchipuram", "study": "M.Sc Physics", "age": 22 }
+]
