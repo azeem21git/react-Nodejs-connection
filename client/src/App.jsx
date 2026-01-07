@@ -150,7 +150,7 @@ const handleAddRecord = async () => {
                 <td>{item.city}</td>
                 <td>{item.study}</td>
                 <td>{item.age}</td>
-                <td><button >Edit</button></td>
+                <td><button onClick={handleUpdateRecord}>Edit</button></td>
                 <td><button onClick={()=>handleDelete(item.id)}>Delete</button></td>
               </tr>
             ))
