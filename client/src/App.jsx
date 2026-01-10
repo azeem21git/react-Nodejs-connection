@@ -6,6 +6,12 @@ import React, { useEffect, useState } from 'react'
 const App = () => {
 
 const [user,setUser]=useState([])
+const [formData ,setFormData]=useState({
+  name:"",
+  city:"",
+  study:"",
+  age:""
+})
 
 async function showUser(){
     try {
@@ -13,19 +19,47 @@ async function showUser(){
       setUser(res.data)
       
     } catch (error) {
-      console.log("error is " + error)
+      console.log("error is " , error)
     }
 }
 
 
 async function deleteUser(id){
-   try {
-     await axios.delete(`http://localhost:3000/api/user/id`)
-
+  const isConfirmed=window.confirm("Are your sure you want delete this user")
+   
+  if(isConfirmed)
+  {
+    try {
+     const res=await axios.delete(`http://localhost:3000/api/user/${id}`)
+     setUser(res.data)
+     alert("user delete successfully")
+     
    } catch (error) {
-    
+     console.log("error is ",error)
    }
+  }
 }
+
+const handleChange =(e)=>{
+    const {name , value}=e.target;
+    
+    setFormData({
+      ...formData,
+      [name]:value
+    })
+
+}
+
+
+async function AddUser(){
+try {
+   const res=   await axios.post('http://localhost:3000/api/user' ,formData)
+   setUser(res.data)
+} catch (error) {
+  
+}
+}
+
 
 useEffect(()=>{
   showUser()
@@ -34,6 +68,14 @@ useEffect(()=>{
   return (
     <div className='Container'>
       <h1>Todo App (CRUD)</h1>
+
+      <div>
+        <input type="text" name='name' onChange={handleChange} value={formData.name}/>
+        <input type='text' name='city' onChange={handleChange} value={formData.city}/>
+        <input type='text' name='study' onChange={handleChange} value={formData.study}/>
+        <input type='number' name='age' onChange={handleChange} value={formData.age}/>
+        <button onClick={AddUser}>AddUser</button>
+      </div>
       
       <table>
       <thead>
@@ -44,6 +86,7 @@ useEffect(()=>{
         <td>Study</td>
         <td>Age</td>
         <td>Delete</td>
+        <td>Edit</td>
       </tr>
       </thead>
 
@@ -57,7 +100,8 @@ useEffect(()=>{
              <td>{item.city}</td>
              <td>{item.study}</td>
              <td>{item.age}</td>
-             <td><button onClick={deleteUser(item.id)}>Delete</button></td>
+             <td><button onClick={()=>deleteUser(item.id) }>Delete</button></td>
+             <td><button >Edit</button></td>
           </tr>
           )
           

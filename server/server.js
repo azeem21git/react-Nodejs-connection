@@ -1,6 +1,7 @@
 const express= require('express')
 const cors =require('cors')
-const users =require('./data.json')
+const fs =require('fs')
+let users =require('./data.json')
 
 const app=express()
 app.use(express.json())
@@ -10,6 +11,25 @@ app.use(cors())
 app.get('/api/user',(req,res)=>{
     res.json(users)
 })
+
+
+
+app.delete('/api/user/:id',async(req,res)=>{
+    const id =Number(req.params.id)
+
+    users=users.filter(user=>user.id !== id);
+    await fs.writeFile('./data.json' ,JSON.stringify(users,null,2))
+     return res.json(users)
+})
+
+
+app.post('/api/user',(req,res)=>{
+    const newId=users.length>0 ? users[users.length-1].id+1 :1
+    const newUser ={id : newId ,...req.body};
+    users.push(newUser)
+    res.json(users)
+})
+
 
 
 app.listen(3000,()=>{
