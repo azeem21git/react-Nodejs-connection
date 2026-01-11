@@ -1,7 +1,10 @@
 const express= require('express')
 const cors =require('cors')
+const mongoose=require('mongoose')
 const fs =require('fs')
-let users =require('./data.json')
+//let users =require('./data.json')
+let  User =require('./Model/User')
+
 
 const app=express()
 app.use(express.json())
@@ -9,26 +12,62 @@ app.use(cors())
 
 
 app.get('/api/user',(req,res)=>{
+    const users =User.find()
     res.json(users)
 })
 
 
 
 app.delete('/api/user/:id',async(req,res)=>{
-    const id =Number(req.params.id)
-
-    users=users.filter(user=>user.id !== id);
-    await fs.writeFile('./data.json' ,JSON.stringify(users,null,2))
-     return res.json(users)
+   try {
+    await User.findByIdAndDelete(req.params.id)
+    const allUsers = await User.find()
+    res.json(allUsers)
+   } catch (error) {
+    
+   }
 })
 
 
-app.post('/api/user',(req,res)=>{
-    const newId=users.length>0 ? users[users.length-1].id+1 :1
-    const newUser ={id : newId ,...req.body};
-    users.push(newUser)
-    res.json(users)
+// app.post('/api/user',(req,res)=>{
+//     const newId=users.length>0 ? users[users.length-1].id+1 :1
+//     const newUser ={id : newId ,...req.body};
+//     users.push(newUser)
+//     res.json(users)
+// })
+
+
+
+app.post('/api/user',async(req,res)=>{
+  try {
+    const newUser = new User(req.body)
+    await newUser.save()
+    const allUsers  =await User.save()
+    res.json(allUsers)
+  } catch (error) {
+    
+  }
 })
+
+
+
+app.put('/api/user/:id',(req,res)=>{
+     const id =Number(req.params.id)
+     const index=users.findIndex(user=>user.id == id)
+     if(index !== -1)
+     {
+        users[index]={id,...req.body}
+        return res.json(users)
+     }
+     else{
+        res.statusCode(404).json({message:"User not found"})
+     }
+})
+
+
+mongoose.connect('mongodb://127.0.0.1:27017/userDB')
+     .then(()=>console.log("MongoDB connected successfully ..."))
+     .catch((err)=>console.log("MongoDb Connection Error:",err))
 
 
 

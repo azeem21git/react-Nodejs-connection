@@ -6,12 +6,16 @@ import React, { useEffect, useState } from 'react'
 const App = () => {
 
 const [user,setUser]=useState([])
+const [isEditing ,setIsEditing]=useState(false)
+const [currentId , setCurrentId] =useState(null)
 const [formData ,setFormData]=useState({
   name:"",
   city:"",
   study:"",
   age:""
 })
+
+
 
 async function showUser(){
     try {
@@ -53,11 +57,28 @@ const handleChange =(e)=>{
 
 async function AddUser(){
 try {
-   const res=   await axios.post('http://localhost:3000/api/user' ,formData)
-   setUser(res.data)
+   if(isEditing){
+    const res=await axios.put(`http://localhost:3000/api/user/${currentId}`,formData);
+    setUser(res.data);
+    setIsEditing(false)
+   }
+   else{
+    const res=   await axios.post('http://localhost:3000/api/user' ,formData)
+    setUser(res.data)
+   }
+   setFormData({name:"",city:"",study:"",age:""})
+
 } catch (error) {
   
 }
+}
+
+
+
+function startEdit(user){
+     setIsEditing(true)
+     setCurrentId(user.id)
+     setFormData(user)
 }
 
 
@@ -74,7 +95,9 @@ useEffect(()=>{
         <input type='text' name='city' onChange={handleChange} value={formData.city}/>
         <input type='text' name='study' onChange={handleChange} value={formData.study}/>
         <input type='number' name='age' onChange={handleChange} value={formData.age}/>
-        <button onClick={AddUser}>AddUser</button>
+        <button onClick={AddUser}>{isEditing ? "UpdateUser":"AddUser"}</button>
+
+
       </div>
       
       <table>
@@ -94,14 +117,14 @@ useEffect(()=>{
       {
         user.map((item)=>{
           return(
-            <tr key={item.id}>
-             <td>{item.id}</td>
+            <tr key={item._id}>
+             <td>{item._id}</td>
              <td>{item.name}</td>
              <td>{item.city}</td>
              <td>{item.study}</td>
              <td>{item.age}</td>
-             <td><button onClick={()=>deleteUser(item.id) }>Delete</button></td>
-             <td><button >Edit</button></td>
+             <td><button onClick={()=>deleteUser(item._id) }>Delete</button></td>
+             <td><button onClick={()=>startEdit(item)}>Edit</button></td>
           </tr>
           )
           
