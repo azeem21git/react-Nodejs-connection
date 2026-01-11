@@ -11,8 +11,8 @@ app.use(express.json())
 app.use(cors())
 
 
-app.get('/api/user',(req,res)=>{
-    const users =User.find()
+app.get('/api/user',async(req,res)=>{
+    const users =await User.find()
     res.json(users)
 })
 
@@ -51,16 +51,13 @@ app.post('/api/user',async(req,res)=>{
 
 
 
-app.put('/api/user/:id',(req,res)=>{
-     const id =Number(req.params.id)
-     const index=users.findIndex(user=>user.id == id)
-     if(index !== -1)
-     {
-        users[index]={id,...req.body}
-        return res.json(users)
-     }
-     else{
-        res.statusCode(404).json({message:"User not found"})
+app.put('/api/user/:id',async(req,res)=>{
+     try {
+        await User.findByIdAndUpdate(req.params.id , req.body,{new :true})
+        const allUsers=await User.find()
+        res.json(allUsers)
+     } catch (error) {
+        
      }
 })
 

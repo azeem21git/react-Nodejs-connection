@@ -61,12 +61,15 @@ try {
     const res=await axios.put(`http://localhost:3000/api/user/${currentId}`,formData);
     setUser(res.data);
     setIsEditing(false)
+    setCurrentId(null)
    }
    else{
     const res=   await axios.post('http://localhost:3000/api/user' ,formData)
     setUser(res.data)
+     
    }
    setFormData({name:"",city:"",study:"",age:""})
+   alert("Success!")
 
 } catch (error) {
   
@@ -77,7 +80,7 @@ try {
 
 function startEdit(user){
      setIsEditing(true)
-     setCurrentId(user.id)
+     setCurrentId(user._id)
      setFormData(user)
 }
 
@@ -95,7 +98,7 @@ useEffect(()=>{
         <input type='text' name='city' onChange={handleChange} value={formData.city}/>
         <input type='text' name='study' onChange={handleChange} value={formData.study}/>
         <input type='number' name='age' onChange={handleChange} value={formData.age}/>
-        <button onClick={AddUser}>{isEditing ? "UpdateUser":"AddUser"}</button>
+        <button type='button' onClick={AddUser}>{isEditing ? "UpdateUser":"AddUser"}</button>
 
 
       </div>
@@ -115,10 +118,10 @@ useEffect(()=>{
 
       <tbody>
       {
-        user.map((item)=>{
+        user.map((item,index)=>{
           return(
             <tr key={item._id}>
-             <td>{item._id}</td>
+             <td>{index+1}</td>
              <td>{item.name}</td>
              <td>{item.city}</td>
              <td>{item.study}</td>
